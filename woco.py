@@ -6,12 +6,10 @@ import re
 import time
 #import locale
 from collections import Counter, OrderedDict
+
 from nltk.corpus import wordnet as wn
-
-
-
 from WordNet.Lemmatizer import Lemmatizer
-from translate_func3 import translate
+from translate_func import translate
 
 ##from PyDictionary import PyDictionary
 
@@ -168,6 +166,7 @@ def countwords(words, short):
                         if ends[ending] != None: words.insert(s+1, ends[ending])
                     break
     for curword in words:
+        if len(curword) == 1: continue
         lemma = lemmatizer.GetLemma(curword.lower())
         if (lemma == "") or (' ' in curword) or ('-' in curword and curword.count("-")>lemma.count("-")): # испраляем ошибки лемматайзера. последнее - если он съел часть составного слова
             lemma=curword.lower()
@@ -340,7 +339,6 @@ for book in listBooks:
     pairs = newwords(wordcounts, wordsdict)
 #    print(locale.getpreferredencoding())
     print('Total words =', len(words))
-    print('Unknown words (distinct) =', len(pairs))
 
     pairs.extend(list(phrasecounts2.items()))
     pairs.sort(key=lambda a: a[1], reverse=True)
@@ -498,10 +496,7 @@ for book in listBooks:
 #    except Exception as e:
  #       print(e)
 
-
-
-
-
+    print('Unknown words (distinct) =', len(pairs))
     print('Known words =', round(100-100*unknownwords/len(words)), '%')
 #    print('Time =', time.time()-starttime)
 input("--------------------------------------------------------\nFinished\nPress any key to exit")
